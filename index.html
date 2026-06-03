@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shahriar Mahmud Salman</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =========================
+GLOBAL
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+    scroll-behavior:smooth;
+    cursor:none;
+}
+
+body{
+    background:#06010d;
+    color:white;
+    overflow-x:hidden;
+    transition:.4s;
+}
+
+/* =========================
+LIGHT MODE
+========================= */
+
+body.light{
+    background:#f5f5ff;
+    color:#111;
+}
+
+body.light nav{
+    background:rgba(255,255,255,.5);
+}
+
+body.light .card{
+    background:rgba(255,255,255,.7);
+}
+
+body.light .hero p,
+body.light .card p,
+body.light .about p{
+    color:#333;
+}
+
+/* =========================
+CUSTOM CURSOR
+========================= */
+
+.cursor{
+    width:18px;
+    height:18px;
+    border:2px solid #ff4fd8;
+    border-radius:50%;
+    position:fixed;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    z-index:9999;
+    box-shadow:0 0 20px #ff4fd8;
+}
+
+/* =========================
+LOADER
+========================= */
+
+.loader{
+    position:fixed;
+    inset:0;
+    background:#05010c;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:10000;
+    transition:1s;
+}
+
+.loader h1{
+    font-size:2rem;
+    background:linear-gradient(90deg,#a855f7,#ff4fd8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+    from{
+        transform:scale(1);
+    }
+    to{
+        transform:scale(1.1);
+    }
+}
+
+/* =========================
+PARTICLES
+========================= */
+
+.particle{
+    position:fixed;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#ff4fd8;
+    opacity:.4;
+    animation:float linear infinite;
+    z-index:-2;
+}
+
+@keyframes float{
+    from{
+        transform:translateY(100vh);
+    }
+    to{
+        transform:translateY(-100vh);
+    }
+}
+
+/* =========================
+BACKGROUND GLOW
+========================= */
+
+.glow1,
+.glow2{
+    position:fixed;
+    border-radius:50%;
+    filter:blur(140px);
+    z-index:-3;
+}
+
+.glow1{
+    width:400px;
+    height:400px;
+    background:#8b5cf6;
+    top:-100px;
+    left:-100px;
+    opacity:.35;
+}
+
+.glow2{
+    width:350px;
+    height:350px;
+    background:#ec4899;
+    bottom:-100px;
+    right:-100px;
+    opacity:.3;
+}
+
+/* =========================
+NAVBAR
+========================= */
+
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:22px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    backdrop-filter:blur(16px);
+    background:rgba(10,10,20,.35);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    z-index:1000;
+}
+
+.logo{
+    font-size:1.3rem;
+    font-weight:600;
+}
+
+.logo span{
+    color:#ff4fd8;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:28px;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:#ddd;
+    transition:.3s;
+}
+
+nav ul li a:hover{
+    color:#ff4fd8;
+}
+
+.toggle-btn{
+    border:none;
+    padding:10px 16px;
+    border-radius:30px;
+    color:white;
+    background:linear-gradient(90deg,#7c3aed,#ec4899);
+}
+
+/* =========================
+PAGES
+========================= */
+
+.page{
+    min-height:100vh;
+    display:none;
+    padding:130px 8% 80px;
+    animation:fade .6s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* =========================
+HERO
+========================= */
+
+.hero{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.hero-content{
+    max-width:850px;
+}
+
+/* =========================
+PROFILE IMAGE
+========================= */
+
+.profile-wrap{
+    position:relative;
+    width:210px;
+    height:210px;
+    margin:auto;
+    margin-bottom:30px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Glow Ring */
+
+.profile-wrap::before{
+
+    content:'';
+    position:absolute;
+    inset:-6px;
+    border-radius:50%;
+
+    background:linear-gradient(
+    45deg,
+    #8b5cf6,
+    #ff4fd8,
+    #8b5cf6
+    );
+
+    filter:blur(12px);
+
+    animation:rotateGlow 6s linear infinite;
+
+    z-index:-1;
+}
+
+/* Image */
+
+.profile-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:50%;
+    border:4px solid #111;
+}
+
+.profile-image{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #111;
+}
+
+@keyframes rotateGlow{
+    100%{
+        filter:hue-rotate(360deg);
+    }
+}
+
+/* =========================
+TEXTS
+========================= */
+
+.hero-sub{
+    color:#c084fc;
+    letter-spacing:2px;
+    margin-bottom:15px;
+    font-size:.9rem;
+}
+
+.hero h1{
+    font-size:4rem;
+    margin-bottom:18px;
+}
+
+.gradient{
+    background:linear-gradient(90deg,#c084fc,#ff4fd8);
+    background-clip:text;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.typing{
+    color:#ff4fd8;
+    font-size:1.2rem;
+    font-weight:600;
+    height:30px;
+    margin-bottom:25px;
+}
+
+.hero p{
+    color:#d0d0d0;
+    line-height:1.9;
+    margin-bottom:35px;
+}
+
+/* =========================
+BUTTON
+========================= */
+
+.btn{
+    display:inline-block;
+    padding:14px 32px;
+    border-radius:40px;
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(90deg,#7c3aed,#ec4899);
+    transition:.4s;
+    box-shadow:0 0 25px rgba(236,72,153,.3);
+}
+
+.btn:hover{
+    transform:translateY(-4px);
+}
+
+/* =========================
+TITLE
+========================= */
+
+.section-title{
+    text-align:center;
+    font-size:2.5rem;
+    margin-bottom:60px;
+}
+
+/* =========================
+CARDS
+========================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    padding:25px;
+    border-radius:24px;
+    backdrop-filter:blur(15px);
+    transition:.4s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    border-color:#ff4fd8;
+    box-shadow:0 0 35px rgba(255,79,216,.25);
+}
+
+.card img{
+    width:100%;
+    border-radius:18px;
+    margin-bottom:15px;
+}
+
+.card h3{
+    margin-bottom:12px;
+}
+
+.card p{
+    color:#d0d0d0;
+    line-height:1.8;
+}
+
+/* =========================
+ABOUT
+========================= */
+
+.about{
+    max-width:850px;
+    margin:auto;
+    text-align:center;
+}
+
+.about p{
+    line-height:2;
+    color:#d2d2d2;
+}
+
+/* =========================
+CLOCK
+========================= */
+
+.clock{
+    margin-top:40px;
+    color:#ff4fd8;
+    font-size:1.2rem;
+}
+
+/* =========================
+MUSIC
+========================= */
+
+.music-box{
+    text-align:center;
+}
+
+.music-box iframe{
+    width:100%;
+    max-width:700px;
+    height:120px;
+    border:none;
+    border-radius:20px;
+}
+
+/* =========================
+FOOTER
+========================= */
+
+footer{
+    text-align:center;
+    padding:35px;
+    border-top:1px solid rgba(255,255,255,.05);
+    color:#888;
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    .hero h1{
+        font-size:2.7rem;
+    }
+
+    nav ul{
+        gap:14px;
+    }
+
+    nav ul li a{
+        font-size:.9rem;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+LOADER
+========================= -->
+
+<div class="loader" id="loader">
+<h1>Loading Portfolio...</h1>
+</div>
+
+<!-- =========================
+CURSOR
+========================= -->
+
+<div class="cursor" id="cursor"></div>
+
+<!-- =========================
+PARTICLES
+========================= -->
+
+<script>
+
+for(let i=0;i<40;i++){
+
+let particle=document.createElement("div");
+
+particle.classList.add("particle");
+
+particle.style.left=Math.random()*100+"vw";
+
+particle.style.animationDuration=
+(Math.random()*5+5)+"s";
+
+particle.style.opacity=Math.random();
+
+document.body.appendChild(particle);
+
+}
+
+</script>
+
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<!-- =========================
+NAVBAR
+========================= -->
+
+<nav>
+
+<div class="logo">
+S<span>M</span>S
+</div>
+
+<ul>
+
+<li>
+<a href="#" onclick="showPage('home')">
+Home
+</a>
+</li>
+
+<li>
+<a href="#" onclick="showPage('about')">
+About
+</a>
+</li>
+
+<li>
+<a href="#" onclick="showPage('projects')">
+Projects
+</a>
+</li>
+
+<li>
+<a href="#" onclick="showPage('music')">
+Music
+</a>
+</li>
+
+<li>
+<a href="#" onclick="showPage('socials')">
+Socials
+</a>
+</li>
+
+</ul>
+
+<button class="toggle-btn" onclick="toggleTheme()">
+Toggle Mode
+</button>
+
+</nav>
+
+<!-- =========================
+HOME
+========================= -->
+
+<section id="home" class="page active">
+
+<div class="hero">
+
+<div class="hero-content">
+
+<div class="profile-wrap">
+
+<img 
+src="salman.jpg"
+class="profile-image"
+>
+
+</div>
+
+<div class="hero-sub">
+FUTURE DEVELOPER • CREATIVE THINKER
+</div>
+
+<h1>
+Shahriar Mahmud <br>
+<span class="gradient">
+Salman
+</span>
+</h1>
+
+<div class="typing" id="typing"></div>
+
+<p>
+Building futuristic digital experiences with creativity,
+minimal aesthetics, and a mindset driven by innovation,
+growth, and excellence.
+</p>
+
+<a href="#" class="btn" onclick="showPage('projects')">
+Explore Projects
+</a>
+
+<div class="clock" id="clock"></div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =========================
+ABOUT
+========================= -->
+
+<section id="about" class="page">
+
+<h2 class="section-title">
+About Me
+</h2>
+
+<div class="about">
+
+<p>
+
+I am a passionate learner and aspiring developer
+focused on futuristic web design, premium user
+experience, and modern digital aesthetics.
+
+I enjoy combining creativity with technology to
+create meaningful projects and interactive
+experiences with a clean futuristic vibe.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- =========================
+PROJECTS
+========================= -->
+
+<section id="projects" class="page">
+
+<h2 class="section-title">
+Projects
+</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop">
+
+<h3>
+Modern Portfolio
+</h3>
+
+<p>
+Futuristic glassmorphism portfolio with neon aesthetics.
+</p>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop">
+
+<h3>
+Creative Branding
+</h3>
+
+<p>
+Minimal premium branding concepts and stylish UI ideas.
+</p>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop">
+
+<h3>
+Future Web Apps
+</h3>
+
+<p>
+Responsive modern web apps and creative projects.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =========================
+MUSIC
+========================= -->
+
+<section id="music" class="page">
+
+<h2 class="section-title">
+Music Vibe
+</h2>
+
+<div class="music-box">
+
+<iframe
+src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0XUsuxWHRQd">
+</iframe>
+
+</div>
+
+</section>
+
+<!-- =========================
+SOCIALS
+========================= -->
+
+<section id="socials" class="page">
+
+<h2 class="section-title">
+Social Links
+</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>
+Facebook
+</h3>
+
+<p>
+Connect with me on Facebook.
+</p>
+
+<br>
+
+<a
+href="https://www.facebook.com/share/1BFeyDmbmG/"
+target="_blank"
+class="btn"
+>
+Open Facebook
+</a>
+
+</div>
+
+<div class="card">
+
+<h3>
+Instagram
+</h3>
+
+<p>
+Follow me on Instagram.
+</p>
+
+<br>
+
+<a
+href="https://www.instagram.com/mahmud_salmaan?igsh=MWpnODFmb3F6aTFuOA=="
+target="_blank"
+class="btn"
+>
+Open Instagram
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =========================
+FOOTER
+========================= -->
+
+<footer>
+© 2026 Shahriar Mahmud Salman — All Rights Reserved.
+</footer>
+
+<!-- =========================
+JAVASCRIPT
+========================= -->
+
+<script>
+
+/* =========================
+PAGE SWITCH
+========================= */
+
+function showPage(pageId){
+
+let pages=document.querySelectorAll('.page');
+
+pages.forEach(page=>{
+
+page.classList.remove('active');
+
+});
+
+document.getElementById(pageId)
+.classList.add('active');
+
+window.scrollTo(0,0);
+
+}
+
+/* =========================
+CURSOR
+========================= */
+
+const cursor=document.getElementById('cursor');
+
+document.addEventListener('mousemove',(e)=>{
+
+cursor.style.left=e.clientX+'px';
+cursor.style.top=e.clientY+'px';
+
+});
+
+/* =========================
+LOADER
+========================= */
+
+window.addEventListener('load',()=>{
+
+setTimeout(()=>{
+
+document.getElementById('loader')
+.style.opacity='0';
+
+document.getElementById('loader')
+.style.visibility='hidden';
+
+},1800);
+
+});
+
+/* =========================
+TYPING ANIMATION
+========================= */
+
+const texts=[
+
+"Creative Developer",
+"Future UI Designer",
+"Minimal Aesthetic Creator",
+"Building Digital Experiences"
+
+];
+
+let speed=100;
+let textIndex=0;
+let charIndex=0;
+
+const typing=document.getElementById("typing");
+
+function type(){
+
+if(charIndex<texts[textIndex].length){
+
+typing.innerHTML+=
+texts[textIndex].charAt(charIndex);
+
+charIndex++;
+
+setTimeout(type,speed);
+
+}
+else{
+
+setTimeout(erase,1500);
+
+}
+
+}
+
+function erase(){
+
+if(charIndex>0){
+
+typing.innerHTML=
+texts[textIndex].substring(0,charIndex-1);
+
+charIndex--;
+
+setTimeout(erase,50);
+
+}
+else{
+
+textIndex++;
+
+if(textIndex>=texts.length){
+
+textIndex=0;
+
+}
+
+setTimeout(type,300);
+
+}
+
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+setTimeout(type,1000);
+
+});
+
+/* =========================
+CLOCK
+========================= */
+
+function updateClock(){
+
+let now=new Date();
+
+document.getElementById("clock")
+.innerHTML=now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock,1000);
+
+/* =========================
+THEME TOGGLE
+========================= */
+
+function toggleTheme(){
+
+document.body.classList.toggle("light");
+
+}
+
+</script>
+
+</body>
+</html>
