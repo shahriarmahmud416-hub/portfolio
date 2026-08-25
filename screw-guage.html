@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>স্ক্রু গজ — Zero Error সিমুলেশন</title>
+<title>Screw Gauge — Zero Error Simulation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#121316;
@@ -29,7 +29,7 @@
       repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 5px),
       radial-gradient(circle at 20% -10%, #1a1d21 0%, var(--bg) 55%);
     color:var(--text);
-    font-family:'Inter','Noto Sans Bengali',sans-serif;
+    font-family:'Inter',sans-serif;
     padding:28px 14px 60px;
   }
   .wrap{max-width:900px;margin:0 auto;}
@@ -42,7 +42,7 @@
     text-transform:uppercase;
   }
   h1{
-    font-family:'Oswald','Noto Sans Bengali',sans-serif;
+    font-family:'Oswald',sans-serif;
     font-weight:600;
     font-size:28px;
     margin:6px 0 8px;
@@ -70,7 +70,7 @@
   }
   .step-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--brass);}
   h2{
-    font-family:'Oswald','Noto Sans Bengali',sans-serif;
+    font-family:'Oswald',sans-serif;
     font-weight:500;font-size:18px;margin:0 0 4px;
   }
   .desc{color:var(--muted);font-size:13.5px;margin:0 0 16px;line-height:1.6;}
@@ -146,292 +146,879 @@
 </head>
 <body>
 <div class="wrap">
+
   <header>
-    <div class="eyebrow">Instrument Lab · স্ক্রু গজ</div>
-    <h1>Zero Error — ইন্টারেক্টিভ সিমুলেশন</h1>
-    <p class="sub">স্লাইডার সরিয়ে দেখো instrument-এর নিজস্ব ত্রুটি কীভাবে reading-কে প্রভাবিত করে, এবং তা কীভাবে correct করা হয়।</p>
+    <div class="eyebrow">Instrument Lab · Screw Gauge</div>
+    <h1>Zero Error — Interactive Simulation</h1>
+    <p class="sub">
+      Move the sliders to see how an instrument's own error affects the reading,
+      and how the reading is corrected.
+    </p>
   </header>
 
   <!-- STEP 1 -->
   <div class="panel">
-    <div class="step-tag"><span class="dot"></span>ধাপ ১</div>
-    <h2>জ' (Jaws) বন্ধ অবস্থায় Zero Error সেট করো</h2>
-    <p class="desc">কোনো বস্তু ছাড়াই spindle ও anvil সম্পূর্ণ touch করানো হয়েছে। এখন circular scale-এর কোন ভাগ reference line বরাবর আছে, তা ঠিক করো।</p>
+    <div class="step-tag"><span class="dot"></span>Step 1</div>
+
+    <h2>Set the Zero Error with the Jaws Closed</h2>
+
+    <p class="desc">
+      The spindle and anvil are completely touching with no object between them.
+      Now set which circular scale division aligns with the reference line.
+    </p>
 
     <div class="grid">
+
       <div class="controls">
-        <label>Error-এর ধরন</label>
+
+        <label>Error Type</label>
+
         <div class="pillrow">
-          <div class="pill" id="pill-none" onclick="setSign(0)">ত্রুটি নেই</div>
-          <div class="pill" id="pill-pos" onclick="setSign(1)">ধনাত্মক (+)</div>
-          <div class="pill" id="pill-neg" onclick="setSign(-1)">ঋণাত্মক (−)</div>
+          <div class="pill" id="pill-none" onclick="setSign(0)">
+            No Error
+          </div>
+
+          <div class="pill" id="pill-pos" onclick="setSign(1)">
+            Positive (+)
+          </div>
+
+          <div class="pill" id="pill-neg" onclick="setSign(-1)">
+            Negative (−)
+          </div>
         </div>
 
-        <label>ভাগের সংখ্যা (Divisions) — <span id="magVal">0</span></label>
-        <input type="range" id="magSlider" min="0" max="10" step="1" value="0" oninput="update()">
-        <div class="slideval"><span>0</span><span>10</span></div>
+        <label>
+          Number of Divisions — <span id="magVal">0</span>
+        </label>
+
+        <input
+          type="range"
+          id="magSlider"
+          min="0"
+          max="10"
+          step="1"
+          value="0"
+          oninput="update()"
+        >
+
+        <div class="slideval">
+          <span>0</span>
+          <span>10</span>
+        </div>
 
         <div class="readout">
-          <div class="row main"><span class="k">Zero Error</span><span id="zeVal">0.00 mm</span></div>
-          <div class="row"><span class="k">Main Scale (বন্ধ অবস্থায়)</span><span>0.00 mm</span></div>
-          <div class="row"><span class="k">Circular Scale coincide</span><span id="n0Val">n = 0</span></div>
+
+          <div class="row main">
+            <span class="k">Zero Error</span>
+            <span id="zeVal">0.00 mm</span>
+          </div>
+
+          <div class="row">
+            <span class="k">Main Scale (Jaws Closed)</span>
+            <span>0.00 mm</span>
+          </div>
+
+          <div class="row">
+            <span class="k">Circular Scale Coincidence</span>
+            <span id="n0Val">n = 0</span>
+          </div>
+
         </div>
-        <p class="caption" id="signExplain">কোনো ত্রুটি নেই — circular scale-এর 0, reference line-এর ঠিক বরাবর।</p>
+
+        <p class="caption" id="signExplain">
+          No error — the 0 of the circular scale is exactly aligned
+          with the reference line.
+        </p>
+
       </div>
 
       <div class="dialbox">
         <svg id="dial1" viewBox="0 0 200 200" width="200" height="200"></svg>
         <div class="idxlabel" id="idx1label">n = 0</div>
       </div>
+
     </div>
   </div>
 
+
   <!-- STEP 2 -->
   <div class="panel">
-    <div class="step-tag"><span class="dot"></span>ধাপ ২</div>
-    <h2>এখন একটা বস্তু measure করো</h2>
-    <p class="desc">Jaws-এর মাঝে একটা বস্তু রাখা হয়েছে। instrument যা দেখাবে (Observed), সেটা থেকে zero error বাদ দিয়ে আসল মান (Correct Reading) বের করো।</p>
+
+    <div class="step-tag"><span class="dot"></span>Step 2</div>
+
+    <h2>Now Measure an Object</h2>
+
+    <p class="desc">
+      An object is placed between the jaws. Subtract the zero error from the
+      observed reading to obtain the actual value (Correct Reading).
+    </p>
 
     <div class="grid">
+
       <div class="controls">
-        <label>বস্তুর প্রকৃত পুরুত্ব (True Thickness) — <span id="tVal">0.00</span> mm</label>
-        <input type="range" id="tSlider" min="0" max="400" step="1" value="120" oninput="update()">
-        <div class="slideval"><span>0.00</span><span>4.00 mm</span></div>
+
+        <label>
+          True Thickness of the Object —
+          <span id="tVal">0.00</span> mm
+        </label>
+
+        <input
+          type="range"
+          id="tSlider"
+          min="0"
+          max="400"
+          step="1"
+          value="120"
+          oninput="update()"
+        >
+
+        <div class="slideval">
+          <span>0.00</span>
+          <span>4.00 mm</span>
+        </div>
 
         <div class="ruler-wrap">
-          <svg id="ruler" viewBox="0 0 420 70" width="100%" height="70"></svg>
-          <p class="caption">Main Scale — থিম্বল (ধূসর) সরে গেলে নতুন mm রেখা প্রকাশ পায়</p>
+
+          <svg
+            id="ruler"
+            viewBox="0 0 420 70"
+            width="100%"
+            height="70"
+          ></svg>
+
+          <p class="caption">
+            Main Scale — the thimble (gray) moves to reveal new mm markings
+          </p>
+
         </div>
 
         <div class="readout">
-          <div class="row"><span class="k">MSR (Main Scale)</span><span id="msrVal">0.00 mm</span></div>
-          <div class="row"><span class="k">CSR × LC</span><span id="csrVal">0.00 mm</span></div>
-          <div class="row"><span class="k">Observed Reading</span><span id="obsVal">0.00 mm</span></div>
-          <div class="row"><span class="k">Zero Error</span><span id="zeVal2">0.00 mm</span></div>
-          <div class="row main"><span class="k">Correct Reading</span><span id="corVal">0.00 mm</span></div>
+
+          <div class="row">
+            <span class="k">MSR (Main Scale)</span>
+            <span id="msrVal">0.00 mm</span>
+          </div>
+
+          <div class="row">
+            <span class="k">CSR × LC</span>
+            <span id="csrVal">0.00 mm</span>
+          </div>
+
+          <div class="row">
+            <span class="k">Observed Reading</span>
+            <span id="obsVal">0.00 mm</span>
+          </div>
+
+          <div class="row">
+            <span class="k">Zero Error</span>
+            <span id="zeVal2">0.00 mm</span>
+          </div>
+
+          <div class="row main">
+            <span class="k">Correct Reading</span>
+            <span id="corVal">0.00 mm</span>
+          </div>
+
         </div>
+
       </div>
 
       <div class="dialbox">
         <svg id="dial2" viewBox="0 0 200 200" width="200" height="200"></svg>
         <div class="idxlabel" id="idx2label">n = 0</div>
       </div>
+
     </div>
 
     <div class="formula" id="formulaBox">
       Correct Reading = Observed − Zero Error
     </div>
+
   </div>
 
+
   <footer>
-    ধরে নেওয়া হয়েছে: Pitch = 1 mm, Circular Scale = 100 ভাগ, তাই Least Count (LC) = 0.01 mm।<br>
-    এই মানগুলো সাধারণ পাঠ্যবই কনভেনশন অনুযায়ী — বাস্তব instrument ভেদে ভিন্ন হতে পারে।
+    Assumed: Pitch = 1 mm, Circular Scale = 100 divisions,
+    therefore Least Count (LC) = 0.01 mm.<br>
+    These values follow common textbook conventions and may vary
+    depending on the actual instrument.
   </footer>
+
 </div>
+
 
 <script>
 const LC = 0.01;
 let sign = 0; // -1, 0, 1
 
-function setSign(s){ sign = s; update(); }
+function setSign(s){
+  sign = s;
+  update();
+}
 
 function buildDial(svgId, ticks){
   const svg = document.getElementById(svgId);
   svg.innerHTML = '';
-  const ns = 'http://www.w3.org/2000/svg';
-  const cx=100, cy=100, rOuter=88, rTickOut=84, rTickInMinor=74, rTickInMajor=68, rLabel=58;
 
-  // outer rim
+  const ns = 'http://www.w3.org/2000/svg';
+
+  const cx=100, cy=100;
+  const rOuter=88;
+  const rTickOut=84;
+  const rTickInMinor=74;
+  const rTickInMajor=68;
+  const rLabel=58;
+
+  // Outer rim
   const rim = document.createElementNS(ns,'circle');
-  rim.setAttribute('cx',cx); rim.setAttribute('cy',cy); rim.setAttribute('r',rOuter);
-  rim.setAttribute('fill','#2b2f33'); rim.setAttribute('stroke','#4a4038'); rim.setAttribute('stroke-width','2');
+
+  rim.setAttribute('cx',cx);
+  rim.setAttribute('cy',cy);
+  rim.setAttribute('r',rOuter);
+
+  rim.setAttribute('fill','#2b2f33');
+  rim.setAttribute('stroke','#4a4038');
+  rim.setAttribute('stroke-width','2');
+
   svg.appendChild(rim);
+
+
   const rim2 = document.createElementNS(ns,'circle');
-  rim2.setAttribute('cx',cx); rim2.setAttribute('cy',cy); rim2.setAttribute('r',rOuter-6);
-  rim2.setAttribute('fill','none'); rim2.setAttribute('stroke','#c9a15a'); rim2.setAttribute('stroke-width','1'); rim2.setAttribute('opacity','0.35');
+
+  rim2.setAttribute('cx',cx);
+  rim2.setAttribute('cy',cy);
+  rim2.setAttribute('r',rOuter-6);
+
+  rim2.setAttribute('fill','none');
+  rim2.setAttribute('stroke','#c9a15a');
+  rim2.setAttribute('stroke-width','1');
+  rim2.setAttribute('opacity','0.35');
+
   svg.appendChild(rim2);
 
+
   const group = document.createElementNS(ns,'g');
-  group.setAttribute('id', svgId+'-rot');
-  group.style.transformOrigin = cx+'px '+cy+'px';
+
+  group.setAttribute('id',svgId+'-rot');
+
+  group.style.transformOrigin =
+    cx+'px '+cy+'px';
+
 
   for(let i=0;i<100;i++){
+
     const ang = (i/100)*360;
-    const rad = (ang-90)*Math.PI/180;
+
+    const rad =
+      (ang-90)*Math.PI/180;
+
     const major = i%10===0;
-    const rIn = major ? rTickInMajor : rTickInMinor;
-    const x1 = cx+rIn*Math.cos(rad), y1=cy+rIn*Math.sin(rad);
-    const x2 = cx+rTickOut*Math.cos(rad), y2=cy+rTickOut*Math.sin(rad);
-    const line = document.createElementNS(ns,'line');
-    line.setAttribute('x1',x1);line.setAttribute('y1',y1);
-    line.setAttribute('x2',x2);line.setAttribute('y2',y2);
-    line.setAttribute('stroke', major? '#e9e6dd':'#7a7f84');
-    line.setAttribute('stroke-width', major? 1.6:0.8);
+
+    const rIn =
+      major ? rTickInMajor : rTickInMinor;
+
+    const x1 =
+      cx+rIn*Math.cos(rad);
+
+    const y1 =
+      cy+rIn*Math.sin(rad);
+
+    const x2 =
+      cx+rTickOut*Math.cos(rad);
+
+    const y2 =
+      cy+rTickOut*Math.sin(rad);
+
+
+    const line =
+      document.createElementNS(ns,'line');
+
+    line.setAttribute('x1',x1);
+    line.setAttribute('y1',y1);
+    line.setAttribute('x2',x2);
+    line.setAttribute('y2',y2);
+
+    line.setAttribute(
+      'stroke',
+      major ? '#e9e6dd' : '#7a7f84'
+    );
+
+    line.setAttribute(
+      'stroke-width',
+      major ? 1.6 : 0.8
+    );
+
     group.appendChild(line);
+
+
     if(major){
-      const lx = cx+rLabel*Math.cos(rad), ly=cy+rLabel*Math.sin(rad);
-      const t = document.createElementNS(ns,'text');
-      t.setAttribute('x',lx); t.setAttribute('y',ly+3);
-      t.setAttribute('text-anchor','middle');
-      t.setAttribute('font-size','9.5');
-      t.setAttribute('font-family','JetBrains Mono');
-      t.setAttribute('fill','#c9c5ba');
+
+      const lx =
+        cx+rLabel*Math.cos(rad);
+
+      const ly =
+        cy+rLabel*Math.sin(rad);
+
+      const t =
+        document.createElementNS(ns,'text');
+
+      t.setAttribute('x',lx);
+      t.setAttribute('y',ly+3);
+
+      t.setAttribute(
+        'text-anchor',
+        'middle'
+      );
+
+      t.setAttribute(
+        'font-size',
+        '9.5'
+      );
+
+      t.setAttribute(
+        'font-family',
+        'JetBrains Mono'
+      );
+
+      t.setAttribute(
+        'fill',
+        '#c9c5ba'
+      );
+
       t.textContent = i;
+
       group.appendChild(t);
     }
   }
+
   svg.appendChild(group);
 
-  // center hub
-  const hub = document.createElementNS(ns,'circle');
-  hub.setAttribute('cx',cx);hub.setAttribute('cy',cy);hub.setAttribute('r',10);
-  hub.setAttribute('fill','#3a3f44'); hub.setAttribute('stroke','#c9a15a'); hub.setAttribute('stroke-width','1');
+
+  // Center hub
+  const hub =
+    document.createElementNS(ns,'circle');
+
+  hub.setAttribute('cx',cx);
+  hub.setAttribute('cy',cy);
+  hub.setAttribute('r',10);
+
+  hub.setAttribute('fill','#3a3f44');
+  hub.setAttribute('stroke','#c9a15a');
+  hub.setAttribute('stroke-width','1');
+
   svg.appendChild(hub);
 
-  // fixed reference index (red) pointing at top
-  const idx = document.createElementNS(ns,'polygon');
-  idx.setAttribute('points', `${cx-6},4 ${cx+6},4 ${cx},18`);
-  idx.setAttribute('fill','#ff5b4d');
+
+  // Fixed reference index pointing at the top
+  const idx =
+    document.createElementNS(ns,'polygon');
+
+  idx.setAttribute(
+    'points',
+    `${cx-6},4 ${cx+6},4 ${cx},18`
+  );
+
+  idx.setAttribute(
+    'fill',
+    '#ff5b4d'
+  );
+
   svg.appendChild(idx);
-  const idxline = document.createElementNS(ns,'line');
-  idxline.setAttribute('x1',cx); idxline.setAttribute('y1',18);
-  idxline.setAttribute('x2',cx); idxline.setAttribute('y2',rTickOut+2);
-  idxline.setAttribute('stroke','#ff5b4d'); idxline.setAttribute('stroke-width','1.2'); idxline.setAttribute('opacity','0.7');
+
+
+  const idxline =
+    document.createElementNS(ns,'line');
+
+  idxline.setAttribute('x1',cx);
+  idxline.setAttribute('y1',18);
+  idxline.setAttribute('x2',cx);
+  idxline.setAttribute(
+    'y2',
+    rTickOut+2
+  );
+
+  idxline.setAttribute(
+    'stroke',
+    '#ff5b4d'
+  );
+
+  idxline.setAttribute(
+    'stroke-width',
+    '1.2'
+  );
+
+  idxline.setAttribute(
+    'opacity',
+    '0.7'
+  );
+
   svg.appendChild(idxline);
 }
 
+
 function rotateDial(svgId, n){
-  const g = document.getElementById(svgId+'-rot');
-  const deg = -(n/100)*360;
-  g.style.transition='transform .35s cubic-bezier(.4,0,.2,1)';
-  g.style.transform = `rotate(${deg}deg)`;
+
+  const g =
+    document.getElementById(svgId+'-rot');
+
+  const deg =
+    -(n/100)*360;
+
+  g.style.transition =
+    'transform .35s cubic-bezier(.4,0,.2,1)';
+
+  g.style.transform =
+    `rotate(${deg}deg)`;
 }
 
-function buildRuler(){
-  const svg = document.getElementById('ruler');
-  svg.innerHTML='';
-  svg.setAttribute('id','ruler');
-  const ns='http://www.w3.org/2000/svg';
-  const maxMM=4, W=400, offX=10, H=70;
-  const scaleX = mm => offX + mm*(W/maxMM);
 
-  const baseline = document.createElementNS(ns,'line');
-  baseline.setAttribute('x1',offX);baseline.setAttribute('y1',40);
-  baseline.setAttribute('x2',offX+W);baseline.setAttribute('y2',40);
-  baseline.setAttribute('stroke','#7a7f84');baseline.setAttribute('stroke-width','1.5');
+function buildRuler(){
+
+  const svg =
+    document.getElementById('ruler');
+
+  svg.innerHTML='';
+
+  const ns =
+    'http://www.w3.org/2000/svg';
+
+  const maxMM=4;
+  const W=400;
+  const offX=10;
+  const H=70;
+
+  const scaleX =
+    mm => offX + mm*(W/maxMM);
+
+
+  const baseline =
+    document.createElementNS(ns,'line');
+
+  baseline.setAttribute('x1',offX);
+  baseline.setAttribute('y1',40);
+  baseline.setAttribute(
+    'x2',
+    offX+W
+  );
+  baseline.setAttribute('y2',40);
+
+  baseline.setAttribute(
+    'stroke',
+    '#7a7f84'
+  );
+
+  baseline.setAttribute(
+    'stroke-width',
+    '1.5'
+  );
+
   svg.appendChild(baseline);
 
+
   for(let i=0;i<=maxMM*2;i++){
+
     const mm=i*0.5;
+
     const x=scaleX(mm);
-    const major = i%2===0;
-    const line=document.createElementNS(ns,'line');
-    line.setAttribute('x1',x);line.setAttribute('y1',40);
-    line.setAttribute('x2',x);line.setAttribute('y2', major?24:30);
-    line.setAttribute('stroke', major?'#e9e6dd':'#8a8f94');
-    line.setAttribute('stroke-width', major?1.5:0.8);
+
+    const major=i%2===0;
+
+    const line =
+      document.createElementNS(ns,'line');
+
+    line.setAttribute('x1',x);
+    line.setAttribute('y1',40);
+
+    line.setAttribute('x2',x);
+
+    line.setAttribute(
+      'y2',
+      major ? 24 : 30
+    );
+
+    line.setAttribute(
+      'stroke',
+      major ? '#e9e6dd' : '#8a8f94'
+    );
+
+    line.setAttribute(
+      'stroke-width',
+      major ? 1.5 : 0.8
+    );
+
     svg.appendChild(line);
+
+
     if(major){
-      const t=document.createElementNS(ns,'text');
-      t.setAttribute('x',x);t.setAttribute('y',18);
-      t.setAttribute('text-anchor','middle');
-      t.setAttribute('font-size','10');
-      t.setAttribute('font-family','JetBrains Mono');
-      t.setAttribute('fill','#9a9ea3');
+
+      const t =
+        document.createElementNS(ns,'text');
+
+      t.setAttribute('x',x);
+      t.setAttribute('y',18);
+
+      t.setAttribute(
+        'text-anchor',
+        'middle'
+      );
+
+      t.setAttribute(
+        'font-size',
+        '10'
+      );
+
+      t.setAttribute(
+        'font-family',
+        'JetBrains Mono'
+      );
+
+      t.setAttribute(
+        'fill',
+        '#9a9ea3'
+      );
+
       t.textContent=mm;
+
       svg.appendChild(t);
     }
   }
-  // sleeve (thimble body) overlay + moving edge marker, ids for update
-  const sleeve = document.createElementNS(ns,'rect');
-  sleeve.setAttribute('id','sleeveRect');
-  sleeve.setAttribute('y',33); sleeve.setAttribute('height',16);
-  sleeve.setAttribute('fill','#3a3f44'); sleeve.setAttribute('opacity','0.75');
-  sleeve.setAttribute('rx','2');
+
+
+  // Sleeve / thimble body overlay
+  const sleeve =
+    document.createElementNS(ns,'rect');
+
+  sleeve.setAttribute(
+    'id',
+    'sleeveRect'
+  );
+
+  sleeve.setAttribute(
+    'y',
+    33
+  );
+
+  sleeve.setAttribute(
+    'height',
+    16
+  );
+
+  sleeve.setAttribute(
+    'fill',
+    '#3a3f44'
+  );
+
+  sleeve.setAttribute(
+    'opacity',
+    '0.75'
+  );
+
+  sleeve.setAttribute(
+    'rx',
+    '2'
+  );
+
   svg.appendChild(sleeve);
 
-  const edge = document.createElementNS(ns,'polygon');
-  edge.setAttribute('id','edgeMarker');
-  edge.setAttribute('fill','#e8a33d');
+
+  // Moving edge marker
+  const edge =
+    document.createElementNS(ns,'polygon');
+
+  edge.setAttribute(
+    'id',
+    'edgeMarker'
+  );
+
+  edge.setAttribute(
+    'fill',
+    '#e8a33d'
+  );
+
   svg.appendChild(edge);
 
+
   window.__scaleX = scaleX;
-  window.__rulerW = W; window.__rulerOffX = offX;
+  window.__rulerW = W;
+  window.__rulerOffX = offX;
 }
+
 
 function updateRuler(msrMM){
-  const scaleX = window.__scaleX;
-  const x = scaleX(msrMM);
-  const sleeve = document.getElementById('sleeveRect');
-  sleeve.setAttribute('x', x);
-  sleeve.setAttribute('width', (window.__rulerOffX+window.__rulerW) - x);
-  const edge = document.getElementById('edgeMarker');
-  edge.setAttribute('points', `${x-5},52 ${x+5},52 ${x},42`);
+
+  const scaleX =
+    window.__scaleX;
+
+  const x =
+    scaleX(msrMM);
+
+  const sleeve =
+    document.getElementById(
+      'sleeveRect'
+    );
+
+  sleeve.setAttribute(
+    'x',
+    x
+  );
+
+  sleeve.setAttribute(
+    'width',
+    (window.__rulerOffX+window.__rulerW)-x
+  );
+
+
+  const edge =
+    document.getElementById(
+      'edgeMarker'
+    );
+
+  edge.setAttribute(
+    'points',
+    `${x-5},52 ${x+5},52 ${x},42`
+  );
 }
 
-function fmt(n){ return (Math.round(n*100)/100).toFixed(2); }
+
+function fmt(n){
+  return (
+    Math.round(n*100)/100
+  ).toFixed(2);
+}
+
 
 function update(){
-  const mag = parseInt(document.getElementById('magSlider').value,10);
-  document.getElementById('magVal').textContent = mag;
 
-  document.getElementById('pill-none').className='pill'+(sign===0?' active-none':'');
-  document.getElementById('pill-pos').className='pill'+(sign===1?' active-pos':'');
-  document.getElementById('pill-neg').className='pill'+(sign===-1?' active-neg':'');
+  const mag =
+    parseInt(
+      document.getElementById(
+        'magSlider'
+      ).value,
+      10
+    );
+
+  document.getElementById(
+    'magVal'
+  ).textContent = mag;
+
+
+  document.getElementById(
+    'pill-none'
+  ).className =
+    'pill'+
+    (sign===0 ? ' active-none' : '');
+
+
+  document.getElementById(
+    'pill-pos'
+  ).className =
+    'pill'+
+    (sign===1 ? ' active-pos' : '');
+
+
+  document.getElementById(
+    'pill-neg'
+  ).className =
+    'pill'+
+    (sign===-1 ? ' active-neg' : '');
+
 
   let zeroErrorMm, n0, explain;
+
+
   if(sign===0){
-    zeroErrorMm = 0; n0 = 0;
-    explain = 'কোনো ত্রুটি নেই — circular scale-এর 0, reference line-এর ঠিক বরাবর।';
+
+    zeroErrorMm = 0;
+    n0 = 0;
+
+    explain =
+      'No error — the 0 of the circular scale is exactly aligned with the reference line.';
+
   } else if(sign===1){
-    zeroErrorMm = mag*LC; n0 = mag;
-    explain = `ধনাত্মক ত্রুটি — circular scale-এর 0, reference line-এর নিচে নেমে গেছে; ${mag} নং ভাগ line বরাবর।`;
+
+    zeroErrorMm =
+      mag*LC;
+
+    n0 = mag;
+
+    explain =
+      `Positive error — the 0 of the circular scale has moved below the reference line; division ${mag} is aligned with the reference line.`;
+
   } else {
-    zeroErrorMm = -mag*LC; n0 = mag===0?0:(100-mag);
-    explain = mag===0
-      ? 'কোনো ত্রুটি নেই — circular scale-এর 0, reference line-এর ঠিক বরাবর।'
-      : `ঋণাত্মক ত্রুটি — circular scale-এর 0, reference line-এর উপরে রয়ে গেছে; ${mag} ভাগ বাকি (n = ${n0})।`;
+
+    zeroErrorMm =
+      -mag*LC;
+
+    n0 =
+      mag===0 ? 0 : (100-mag);
+
+    explain =
+      mag===0
+        ? 'No error — the 0 of the circular scale is exactly aligned with the reference line.'
+        : `Negative error — the 0 of the circular scale remains above the reference line; ${mag} divisions are left, so n = ${n0}.`;
   }
 
-  document.getElementById('zeVal').textContent = (zeroErrorMm>=0?'+':'')+fmt(zeroErrorMm)+' mm';
-  document.getElementById('zeVal2').textContent = (zeroErrorMm>=0?'+':'')+fmt(zeroErrorMm)+' mm';
-  document.getElementById('n0Val').textContent = 'n = '+n0;
-  document.getElementById('signExplain').textContent = explain;
-  document.getElementById('idx1label').textContent = 'n = '+n0;
-  rotateDial('dial1', n0);
 
-  // Step 2
-  const tRaw = parseInt(document.getElementById('tSlider').value,10);
-  const t = tRaw/100; // 0.00 - 4.00
-  document.getElementById('tVal').textContent = fmt(t);
+  document.getElementById(
+    'zeVal'
+  ).textContent =
+    (zeroErrorMm>=0?'+':'')+
+    fmt(zeroErrorMm)+
+    ' mm';
 
-  let observed = t + zeroErrorMm;
-  if(observed<0) observed = 0;
-  let msr = Math.floor(observed);
-  let rem = observed - msr;
-  let csr = Math.round(rem/LC);
-  if(csr>=100){ csr=0; msr+=1; }
-  const csrMM = csr*LC;
-  const correct = observed - zeroErrorMm;
 
-  document.getElementById('msrVal').textContent = fmt(msr)+' mm';
-  document.getElementById('csrVal').textContent = fmt(csrMM)+' mm  (n='+csr+')';
-  document.getElementById('obsVal').textContent = fmt(observed)+' mm';
-  document.getElementById('corVal').textContent = fmt(correct)+' mm';
-  document.getElementById('idx2label').textContent = 'n = '+csr;
+  document.getElementById(
+    'zeVal2'
+  ).textContent =
+    (zeroErrorMm>=0?'+':'')+
+    fmt(zeroErrorMm)+
+    ' mm';
+
+
+  document.getElementById(
+    'n0Val'
+  ).textContent =
+    'n = '+n0;
+
+
+  document.getElementById(
+    'signExplain'
+  ).textContent =
+    explain;
+
+
+  document.getElementById(
+    'idx1label'
+  ).textContent =
+    'n = '+n0;
+
+
+  rotateDial(
+    'dial1',
+    n0
+  );
+
+
+  // STEP 2
+
+  const tRaw =
+    parseInt(
+      document.getElementById(
+        'tSlider'
+      ).value,
+      10
+    );
+
+  const t =
+    tRaw/100;
+
+
+  document.getElementById(
+    'tVal'
+  ).textContent =
+    fmt(t);
+
+
+  let observed =
+    t + zeroErrorMm;
+
+  if(observed<0)
+    observed = 0;
+
+
+  let msr =
+    Math.floor(observed);
+
+  let rem =
+    observed-msr;
+
+  let csr =
+    Math.round(
+      rem/LC
+    );
+
+
+  if(csr>=100){
+    csr=0;
+    msr+=1;
+  }
+
+
+  const csrMM =
+    csr*LC;
+
+
+  const correct =
+    observed-zeroErrorMm;
+
+
+  document.getElementById(
+    'msrVal'
+  ).textContent =
+    fmt(msr)+' mm';
+
+
+  document.getElementById(
+    'csrVal'
+  ).textContent =
+    fmt(csrMM)+' mm (n='+csr+')';
+
+
+  document.getElementById(
+    'obsVal'
+  ).textContent =
+    fmt(observed)+' mm';
+
+
+  document.getElementById(
+    'corVal'
+  ).textContent =
+    fmt(correct)+' mm';
+
+
+  document.getElementById(
+    'idx2label'
+  ).textContent =
+    'n = '+csr;
+
 
   updateRuler(msr);
-  rotateDial('dial2', csr);
 
-  const sClass = sign===1?'tag-pos':(sign===-1?'tag-neg':'tag-none');
-  document.getElementById('formulaBox').innerHTML =
-    `Correct Reading = Observed − Zero Error &nbsp;=&nbsp; <b>${fmt(observed)}</b> − <b class="${sClass}">(${zeroErrorMm>=0?'+':''}${fmt(zeroErrorMm)})</b> &nbsp;=&nbsp; <b>${fmt(correct)} mm</b>`;
+  rotateDial(
+    'dial2',
+    csr
+  );
+
+
+  const sClass =
+    sign===1
+      ? 'tag-pos'
+      : (
+          sign===-1
+            ? 'tag-neg'
+            : 'tag-none'
+        );
+
+
+  document.getElementById(
+    'formulaBox'
+  ).innerHTML =
+    `Correct Reading = Observed − Zero Error &nbsp;=&nbsp;
+    <b>${fmt(observed)}</b> −
+    <b class="${sClass}">
+      (${zeroErrorMm>=0?'+':''}${fmt(zeroErrorMm)})
+    </b>
+    &nbsp;=&nbsp;
+    <b>${fmt(correct)} mm</b>`;
 }
+
 
 buildDial('dial1');
 buildDial('dial2');
 buildRuler();
 update();
+
 </script>
+
 </body>
 </html>
