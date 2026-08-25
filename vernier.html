@@ -3,333 +3,1152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Vernier Caliper — Zero Error Simulation</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --bg:#121316; --panel:#1b1e22; --panel2:#23272b; --line:#34393e;
-    --brass:#c9a15a; --amber:#e8a33d; --text:#e9e6dd; --muted:#94989d;
-    --lcd-bg:#140d05; --lcd-fg:#ffb454;
-    --pos:#ff8066; --neg:#6fb8ff; --none:#8fe3a8;
-  }
-  *{box-sizing:border-box;}
+
+/* =========================================================
+   FUTURISTIC PORTFOLIO THEME
+   ========================================================= */
+
+:root{
+  --bg:#050816;
+  --bg2:#080b1c;
+
+  --glass:rgba(255,255,255,0.055);
+  --glass-hover:rgba(255,255,255,0.085);
+
+  --border:rgba(255,255,255,0.10);
+  --border-blue:rgba(79,142,255,0.35);
+
+  --text:#f5f7ff;
+  --muted:#9ca6bd;
+
+  --blue:#4f8cff;
+  --cyan:#35d9ff;
+  --purple:#8b5cf6;
+  --pink:#d946ef;
+
+  --green:#50e3a4;
+  --red:#ff6b7a;
+
+  --lcd:#07101c;
+  --lcd-text:#7de3ff;
+
+  --shadow:0 20px 60px rgba(0,0,0,0.45);
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+
+  background:
+    radial-gradient(circle at 10% 0%, rgba(79,140,255,0.16), transparent 32%),
+    radial-gradient(circle at 90% 10%, rgba(139,92,246,0.15), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(53,217,255,0.07), transparent 35%),
+    linear-gradient(135deg,var(--bg),var(--bg2));
+
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+
+  padding:35px 16px 70px;
+
+  overflow-x:hidden;
+}
+
+/* futuristic background grid */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);
+
+  background-size:50px 50px;
+
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+
+  pointer-events:none;
+  z-index:-1;
+}
+
+.wrap{
+  width:100%;
+  max-width:950px;
+  margin:auto;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header{
+  margin-bottom:30px;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  font-family:'Orbitron',sans-serif;
+  font-size:11px;
+  letter-spacing:0.14em;
+
+  color:var(--cyan);
+
+  padding:7px 12px;
+
+  border:1px solid rgba(53,217,255,0.25);
+  border-radius:999px;
+
+  background:rgba(53,217,255,0.055);
+
+  box-shadow:
+    0 0 25px rgba(53,217,255,0.07);
+}
+
+.eyebrow::before{
+  content:"";
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:var(--cyan);
+
+  box-shadow:0 0 10px var(--cyan);
+}
+
+h1{
+  margin:14px 0 10px;
+
+  font-family:'Orbitron',sans-serif;
+  font-size:clamp(27px,5vw,40px);
+
+  line-height:1.2;
+  letter-spacing:-0.02em;
+
+  background:linear-gradient(
+    90deg,
+    #ffffff,
+    #8ec5ff 45%,
+    #a78bfa
+  );
+
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.sub{
+  max-width:680px;
+
+  color:var(--muted);
+
+  font-size:14px;
+  line-height:1.75;
+
+  margin:0;
+}
+
+/* =========================================================
+   GLASS PANELS
+   ========================================================= */
+
+.panel{
+
+  position:relative;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.075),
+      rgba(255,255,255,0.025)
+    );
+
+  border:1px solid var(--border);
+
+  border-radius:22px;
+
+  padding:24px;
+
+  margin-bottom:22px;
+
+  box-shadow:var(--shadow);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  overflow:hidden;
+}
+
+.panel::before{
+
+  content:"";
+
+  position:absolute;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height:1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(79,140,255,0.7),
+      rgba(139,92,246,0.7),
+      transparent
+    );
+
+  opacity:.7;
+}
+
+.panel::after{
+
+  content:"";
+
+  position:absolute;
+
+  width:180px;
+  height:180px;
+
+  top:-100px;
+  right:-80px;
+
+  background:rgba(79,140,255,0.07);
+
+  filter:blur(45px);
+
+  pointer-events:none;
+}
+
+/* =========================================================
+   STEP TAG
+   ========================================================= */
+
+.step-tag{
+
+  display:inline-flex;
+
+  align-items:center;
+  gap:8px;
+
+  font-family:'Orbitron',sans-serif;
+
+  font-size:10px;
+  letter-spacing:.1em;
+
+  color:#8ec5ff;
+
+  border:1px solid rgba(79,140,255,.3);
+
+  background:rgba(79,140,255,.07);
+
+  border-radius:999px;
+
+  padding:6px 12px;
+
+  margin-bottom:14px;
+}
+
+.step-tag .dot{
+
+  width:6px;
+  height:6px;
+
+  border-radius:50%;
+
+  background:var(--blue);
+
+  box-shadow:0 0 10px var(--blue);
+}
+
+h2{
+
+  margin:0 0 7px;
+
+  font-size:20px;
+
+  font-weight:600;
+
+  letter-spacing:-.02em;
+}
+
+.desc{
+
+  margin:0 0 20px;
+
+  color:var(--muted);
+
+  font-size:13.5px;
+
+  line-height:1.7;
+}
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+
+.controls label{
+
+  display:block;
+
+  color:#aeb8ce;
+
+  font-size:12px;
+
+  margin-bottom:8px;
+
+  font-weight:500;
+}
+
+.pillrow{
+
+  display:flex;
+
+  gap:9px;
+
+  margin-bottom:19px;
+
+  flex-wrap:wrap;
+}
+
+.pill{
+
+  flex:1;
+
+  min-width:100px;
+
+  text-align:center;
+
+  padding:10px 8px;
+
+  border-radius:11px;
+
+  border:1px solid var(--border);
+
+  background:rgba(255,255,255,.035);
+
+  color:#8994ab;
+
+  font-size:12px;
+
+  cursor:pointer;
+
+  transition:.2s ease;
+
+  user-select:none;
+}
+
+.pill:hover{
+
+  background:var(--glass-hover);
+
+  transform:translateY(-1px);
+}
+
+.pill.active-none{
+
+  color:var(--green);
+
+  border-color:rgba(80,227,164,.5);
+
+  background:rgba(80,227,164,.08);
+
+  box-shadow:0 0 20px rgba(80,227,164,.08);
+}
+
+.pill.active-pos{
+
+  color:#ff8794;
+
+  border-color:rgba(255,107,122,.5);
+
+  background:rgba(255,107,122,.08);
+
+  box-shadow:0 0 20px rgba(255,107,122,.08);
+}
+
+.pill.active-neg{
+
+  color:#72b9ff;
+
+  border-color:rgba(79,140,255,.55);
+
+  background:rgba(79,140,255,.09);
+
+  box-shadow:0 0 20px rgba(79,140,255,.08);
+}
+
+/* =========================================================
+   SLIDER
+   ========================================================= */
+
+input[type=range]{
+
+  width:100%;
+
+  height:4px;
+
+  margin:7px 0 6px;
+
+  appearance:none;
+
+  background:linear-gradient(
+    90deg,
+    var(--blue),
+    var(--purple)
+  );
+
+  border-radius:20px;
+
+  outline:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+
+  appearance:none;
+
+  width:16px;
+  height:16px;
+
+  border-radius:50%;
+
+  background:#fff;
+
+  border:3px solid var(--blue);
+
+  box-shadow:
+    0 0 0 4px rgba(79,140,255,.12),
+    0 0 15px rgba(79,140,255,.55);
+
+  cursor:pointer;
+}
+
+input[type=range]::-moz-range-thumb{
+
+  width:16px;
+  height:16px;
+
+  border-radius:50%;
+
+  background:#fff;
+
+  border:3px solid var(--blue);
+
+  cursor:pointer;
+}
+
+.slideval{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  margin-bottom:17px;
+
+  color:#657087;
+
+  font-family:'JetBrains Mono',monospace;
+
+  font-size:11px;
+}
+
+/* =========================================================
+   READOUT
+   ========================================================= */
+
+.readout{
+
+  margin-top:15px;
+
+  padding:15px 16px;
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(5,12,28,.9),
+      rgba(6,15,31,.72)
+    );
+
+  border:1px solid rgba(53,217,255,.12);
+
+  box-shadow:
+    inset 0 0 30px rgba(53,217,255,.025);
+}
+
+.readout .row{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  gap:15px;
+
+  padding:6px 0;
+
+  color:var(--lcd-text);
+
+  font-family:'JetBrains Mono',monospace;
+
+  font-size:12px;
+
+  opacity:.6;
+}
+
+.readout .row .k{
+
+  color:#71829f;
+
+  font-weight:500;
+}
+
+.readout .row.main{
+
+  opacity:1;
+
+  font-size:15px;
+
+  font-weight:700;
+
+  border-top:1px solid rgba(53,217,255,.13);
+
+  margin-top:7px;
+
+  padding-top:12px;
+}
+
+.readout .row.main .k{
+
+  color:#8da0bf;
+}
+
+.readout .row.main span:last-child{
+
+  color:#7de3ff;
+
+  text-shadow:
+    0 0 12px rgba(53,217,255,.3);
+}
+
+/* =========================================================
+   CAPTIONS
+   ========================================================= */
+
+.caption{
+
+  font-size:11px;
+
+  color:#69758b;
+
+  text-align:center;
+
+  margin:8px 0 0;
+
+  line-height:1.6;
+}
+
+.zoomlabel{
+
+  font-family:'JetBrains Mono',monospace;
+
+  font-size:10px;
+
+  color:#7083a7;
+
+  text-align:center;
+
+  margin:20px 0 8px;
+
+  letter-spacing:.08em;
+
+  text-transform:uppercase;
+}
+
+/* =========================================================
+   SVG
+   ========================================================= */
+
+svg{
+
+  display:block;
+
+  width:100%;
+
+  overflow:visible;
+}
+
+#win1,
+#win2{
+
+  border-radius:14px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3,8,20,.65),
+      rgba(5,11,26,.35)
+    );
+
+  border:1px solid rgba(255,255,255,.05);
+
+  padding:5px;
+}
+
+/* =========================================================
+   FORMULA
+   ========================================================= */
+
+.formula{
+
+  margin-top:17px;
+
+  padding:13px 15px;
+
+  border-radius:12px;
+
+  border:1px solid rgba(139,92,246,.18);
+
+  background:
+    linear-gradient(
+      100deg,
+      rgba(79,140,255,.06),
+      rgba(139,92,246,.07)
+    );
+
+  color:#8290aa;
+
+  font-family:'JetBrains Mono',monospace;
+
+  font-size:11px;
+
+  line-height:1.8;
+}
+
+.formula b{
+
+  color:#e9edff;
+}
+
+.tag-pos{
+  color:#ff8794;
+}
+
+.tag-neg{
+  color:#72b9ff;
+}
+
+.tag-none{
+  color:var(--green);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer{
+
+  text-align:center;
+
+  color:#68748b;
+
+  font-size:11px;
+
+  line-height:1.8;
+
+  margin-top:30px;
+
+  padding:0 10px;
+}
+
+footer strong{
+
+  color:#9ba8c1;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:600px){
+
   body{
-    margin:0;
-    background:
-      repeating-linear-gradient(115deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 5px),
-      radial-gradient(circle at 20% -10%, #1a1d21 0%, var(--bg) 55%);
-    color:var(--text); font-family:'Inter',sans-serif;
-    padding:28px 14px 60px;
+    padding:24px 11px 50px;
   }
-  .wrap{max-width:900px;margin:0 auto;}
-  header{margin-bottom:22px;}
-  .eyebrow{font-family:'JetBrains Mono',monospace;color:var(--amber);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;}
-  h1{font-family:'Oswald',sans-serif;font-weight:600;font-size:28px;margin:6px 0 8px;}
-  .sub{color:var(--muted);font-size:14.5px;line-height:1.6;max-width:640px;}
 
   .panel{
-    background:linear-gradient(180deg,var(--panel),var(--panel2));
-    border:1px solid var(--line); border-radius:14px;
-    padding:20px 20px 22px; margin-bottom:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03);
-  }
-  .step-tag{
-    display:inline-flex;align-items:center;gap:8px;
-    font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;
-    color:var(--brass);border:1px solid var(--brass);border-radius:20px;
-    padding:3px 12px 3px 10px;margin-bottom:12px;
-  }
-  .step-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--brass);}
-  h2{font-family:'Oswald',sans-serif;font-weight:500;font-size:18px;margin:0 0 4px;}
-  .desc{color:var(--muted);font-size:13.5px;margin:0 0 16px;line-height:1.6;}
+    padding:19px 16px 20px;
 
-  .grid{display:grid;grid-template-columns:1fr;gap:6px;}
+    border-radius:18px;
+  }
 
-  .controls label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;}
-  .pillrow{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  h2{
+    font-size:18px;
+  }
+
+  .desc{
+    font-size:12.5px;
+  }
+
   .pill{
-    flex:1;min-width:90px;text-align:center;padding:8px 6px;border-radius:8px;
-    border:1px solid var(--line);background:var(--panel2);color:var(--muted);
-    font-size:13px;cursor:pointer;transition:all .15s ease;user-select:none;
+    min-width:80px;
+    font-size:11px;
   }
-  .pill.active-none{background:rgba(143,227,168,0.14);border-color:var(--none);color:var(--none);}
-  .pill.active-pos{background:rgba(255,128,102,0.14);border-color:var(--pos);color:var(--pos);}
-  .pill.active-neg{background:rgba(111,184,255,0.14);border-color:var(--neg);color:var(--neg);}
 
-  input[type=range]{width:100%;accent-color:var(--amber);height:4px;margin:6px 0 4px;}
-  .slideval{font-family:'JetBrains Mono';font-size:13px;color:var(--amber);display:flex;justify-content:space-between;margin-bottom:14px;}
+  .readout .row{
+    font-size:10.5px;
+  }
 
-  .caption{font-size:12px;color:var(--muted);text-align:center;margin-top:6px;}
-  .zoomlabel{font-size:12px;color:var(--brass);text-align:center;margin:14px 0 4px;letter-spacing:0.04em;}
+  .readout .row.main{
+    font-size:13px;
+  }
 
-  .readout{margin-top:14px;background:var(--lcd-bg);border:1px solid #2a1c0c;border-radius:10px;padding:14px 16px;font-family:'JetBrains Mono';}
-  .readout .row{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;color:var(--lcd-fg);opacity:0.55;}
-  .readout .row.main{opacity:1;font-size:16px;font-weight:700;border-top:1px dashed #3a2a12;margin-top:6px;padding-top:10px;}
-  .readout .row .k{color:#c98f45;opacity:0.8;font-weight:500;}
-  .readout .row.main .k{color:var(--lcd-fg);}
+  .formula{
+    font-size:10px;
+  }
+}
 
-  .formula{margin-top:14px;font-size:13px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono';}
-  .tag-pos{color:var(--pos);} .tag-neg{color:var(--neg);} .tag-none{color:var(--none);}
-
-  footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:26px;line-height:1.7;}
 </style>
 </head>
 
 <body>
+
 <div class="wrap">
 
-  <header>
-    <div class="eyebrow">Instrument Lab · Vernier Caliper</div>
+<!-- =======================================================
+     HEADER
+     ======================================================= -->
 
-    <h1>Zero Error — Interactive Simulation</h1>
+<header>
 
-    <p class="sub">
-      See live how coincidence between the main scale and vernier scale
-      creates zero error, and how to subtract it from the reading.
-    </p>
-  </header>
+  <div class="eyebrow">
+    Instrument Lab · Vernier Caliper
+  </div>
+
+  <h1>
+    Zero Error — Interactive Simulation
+  </h1>
+
+  <p class="sub">
+    Explore how coincidence between the main scale and vernier scale
+    creates zero error — and learn how to correct the observed reading.
+  </p>
+
+</header>
 
 
-  <!-- STEP 1 -->
-  <div class="panel">
+<!-- =======================================================
+     STEP 1
+     ======================================================= -->
 
-    <div class="step-tag">
-      <span class="dot"></span>Step 1
+<div class="panel">
+
+  <div class="step-tag">
+    <span class="dot"></span>
+    STEP 01
+  </div>
+
+  <h2>
+    Set the Zero Error with the jaws closed
+  </h2>
+
+  <p class="desc">
+    The two jaws are completely closed without any object between them.
+    Select the type and magnitude of zero error by adjusting the controls.
+  </p>
+
+
+  <div class="controls">
+
+    <label>
+      Error Type
+    </label>
+
+    <div class="pillrow">
+
+      <div
+        class="pill"
+        id="pill-none"
+        onclick="setSign(0)"
+      >
+        No Error
+      </div>
+
+      <div
+        class="pill"
+        id="pill-pos"
+        onclick="setSign(1)"
+      >
+        Positive (+)
+      </div>
+
+      <div
+        class="pill"
+        id="pill-neg"
+        onclick="setSign(-1)"
+      >
+        Negative (−)
+      </div>
+
     </div>
 
-    <h2>Set the Zero Error with the Jaws Closed</h2>
 
-    <p class="desc">
-      The two jaws are completely touching with no object between them.
-      Set which vernier scale division exactly coincides with a main scale line.
-    </p>
+    <label>
+      Vernier Divisions —
+      <span id="magVal">0</span>
+    </label>
 
-    <div class="grid">
+    <input
+      type="range"
+      id="magSlider"
+      min="0"
+      max="9"
+      step="1"
+      value="0"
+      oninput="update()"
+    >
 
-      <div class="controls">
+    <div class="slideval">
 
-        <label>Error Type</label>
+      <span>0</span>
 
-        <div class="pillrow">
+      <span>9</span>
 
-          <div class="pill" id="pill-none" onclick="setSign(0)">
-            No Error
-          </div>
-
-          <div class="pill" id="pill-pos" onclick="setSign(1)">
-            Positive (+)
-          </div>
-
-          <div class="pill" id="pill-neg" onclick="setSign(-1)">
-            Negative (−)
-          </div>
-
-        </div>
+    </div>
 
 
-        <label>
-          Number of Vernier Divisions —
-          <span id="magVal">0</span>
-        </label>
+    <div class="readout">
 
-        <input
-          type="range"
-          id="magSlider"
-          min="0"
-          max="9"
-          step="1"
-          value="0"
-          oninput="update()"
-        >
+      <div class="row main">
 
-        <div class="slideval">
-          <span>0</span>
-          <span>9</span>
-        </div>
+        <span class="k">
+          Zero Error
+        </span>
+
+        <span id="zeVal">
+          0.00 mm
+        </span>
+
+      </div>
 
 
-        <div class="readout">
+      <div class="row">
 
-          <div class="row main">
-            <span class="k">Zero Error</span>
-            <span id="zeVal">0.00 mm</span>
-          </div>
+        <span class="k">
+          Main Scale (Closed)
+        </span>
 
-          <div class="row">
-            <span class="k">Main Scale (Jaws Closed)</span>
-            <span>0 mm</span>
-          </div>
+        <span>
+          0 mm
+        </span>
 
-          <div class="row">
-            <span class="k">Coinciding Division</span>
-            <span id="n0Val">n = 0</span>
-          </div>
-
-        </div>
+      </div>
 
 
-        <p class="caption" id="signExplain">
-          No error — the 0 of the vernier scale is exactly aligned
-          with the 0 of the main scale.
-        </p>
+      <div class="row">
+
+        <span class="k">
+          Coincident Division
+        </span>
+
+        <span id="n0Val">
+          n = 0
+        </span>
 
       </div>
 
     </div>
 
 
-    <div class="zoomlabel">
-      Zoomed View — Coincidence Point
-    </div>
-
-    <svg
-      id="win1"
-      viewBox="0 0 400 110"
-      width="100%"
-      height="110"
-    ></svg>
-
-  </div>
-
-
-  <!-- STEP 2 -->
-  <div class="panel">
-
-    <div class="step-tag">
-      <span class="dot"></span>Step 2
-    </div>
-
-    <h2>Now Measure an Object</h2>
-
-    <p class="desc">
-      An object is placed between the jaws.
-      Subtract the zero error from the observed reading
-      to obtain the Correct Reading.
+    <p
+      class="caption"
+      id="signExplain"
+    >
+      No error — the 0 of the vernier scale is exactly aligned
+      with the 0 of the main scale.
     </p>
 
-
-    <div class="grid">
-
-      <div class="controls">
-
-        <label>
-          True Thickness of the Object —
-          <span id="tVal">0.0</span> mm
-        </label>
-
-        <input
-          type="range"
-          id="tSlider"
-          min="0"
-          max="500"
-          step="1"
-          value="120"
-          oninput="update()"
-        >
-
-        <div class="slideval">
-          <span>0 mm</span>
-          <span>50 mm</span>
-        </div>
-
-
-        <svg
-          id="fullRuler"
-          viewBox="0 0 420 60"
-          width="100%"
-          height="60"
-        ></svg>
-
-        <p class="caption">
-          Full Main Scale — the marker shows the current position of the jaws
-        </p>
-
-
-        <div class="readout">
-
-          <div class="row">
-            <span class="k">MSR (Main Scale)</span>
-            <span id="msrVal">0 mm</span>
-          </div>
-
-          <div class="row">
-            <span class="k">VSC × LC</span>
-            <span id="csrVal">0.00 mm</span>
-          </div>
-
-          <div class="row">
-            <span class="k">Observed Reading</span>
-            <span id="obsVal">0.00 mm</span>
-          </div>
-
-          <div class="row">
-            <span class="k">Zero Error</span>
-            <span id="zeVal2">0.00 mm</span>
-          </div>
-
-          <div class="row main">
-            <span class="k">Correct Reading</span>
-            <span id="corVal">0.00 mm</span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="zoomlabel">
-      Zoomed View — Coincidence Point
-    </div>
-
-    <svg
-      id="win2"
-      viewBox="0 0 400 110"
-      width="100%"
-      height="110"
-    ></svg>
-
-
-    <div class="formula" id="formulaBox">
-      Correct Reading = Observed − Zero Error
-    </div>
-
   </div>
 
 
-  <footer>
-    Assumed: 10 Vernier divisions = 9 Main Scale divisions (9 mm),
-    therefore Least Count (LC) = 0.1 mm.<br>
-    These values follow common textbook conventions and may vary
-    depending on the actual instrument.
-  </footer>
+  <div class="zoomlabel">
+    Zoomed View · Coincidence Point
+  </div>
+
+  <svg
+    id="win1"
+    viewBox="0 0 400 110"
+    width="100%"
+    height="110"
+  ></svg>
 
 </div>
 
 
+
+<!-- =======================================================
+     STEP 2
+     ======================================================= -->
+
+<div class="panel">
+
+  <div class="step-tag">
+
+    <span class="dot"></span>
+
+    STEP 02
+
+  </div>
+
+
+  <h2>
+    Measure an Object
+  </h2>
+
+
+  <p class="desc">
+
+    An object is placed between the jaws.
+    Adjust its true thickness and observe how zero error
+    affects the reading.
+
+  </p>
+
+
+  <div class="controls">
+
+    <label>
+
+      True Thickness —
+
+      <span id="tVal">
+        12.0
+      </span>
+
+      mm
+
+    </label>
+
+
+    <input
+      type="range"
+      id="tSlider"
+      min="0"
+      max="500"
+      step="1"
+      value="120"
+      oninput="update()"
+    >
+
+
+    <div class="slideval">
+
+      <span>
+        0 mm
+      </span>
+
+      <span>
+        50 mm
+      </span>
+
+    </div>
+
+
+    <svg
+      id="fullRuler"
+      viewBox="0 0 420 60"
+      width="100%"
+      height="60"
+    ></svg>
+
+
+    <p class="caption">
+
+      Main Scale Overview — the marker shows the current jaw position.
+
+    </p>
+
+
+    <div class="readout">
+
+      <div class="row">
+
+        <span class="k">
+          MSR (Main Scale)
+        </span>
+
+        <span id="msrVal">
+          0 mm
+        </span>
+
+      </div>
+
+
+      <div class="row">
+
+        <span class="k">
+          VSC × LC
+        </span>
+
+        <span id="csrVal">
+          0.00 mm
+        </span>
+
+      </div>
+
+
+      <div class="row">
+
+        <span class="k">
+          Observed Reading
+        </span>
+
+        <span id="obsVal">
+          0.00 mm
+        </span>
+
+      </div>
+
+
+      <div class="row">
+
+        <span class="k">
+          Zero Error
+        </span>
+
+        <span id="zeVal2">
+          0.00 mm
+        </span>
+
+      </div>
+
+
+      <div class="row main">
+
+        <span class="k">
+          Correct Reading
+        </span>
+
+        <span id="corVal">
+          0.00 mm
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="zoomlabel">
+    Zoomed View · Coincidence Point
+  </div>
+
+
+  <svg
+    id="win2"
+    viewBox="0 0 400 110"
+    width="100%"
+    height="110"
+  ></svg>
+
+
+  <div
+    class="formula"
+    id="formulaBox"
+  >
+    Correct Reading = Observed − Zero Error
+  </div>
+
+</div>
+
+
+
+<!-- =======================================================
+     FOOTER
+     ======================================================= -->
+
+<footer>
+
+  <strong>Instrument Specifications</strong><br>
+
+  Assumption:
+  10 Vernier divisions = 9 Main Scale divisions (9 mm),
+  therefore Least Count (LC) = 0.1 mm.
+
+  <br>
+
+  These values follow a common textbook convention.
+  Actual instruments may use different specifications.
+
+</footer>
+
+</div>
+
+
+
 <script>
 
+/* =========================================================
+   CONSTANTS
+   ========================================================= */
+
 const LC = 0.1;
+
 const NDIV = 10;
+
 let sign = 0;
 
 
+/* =========================================================
+   BASIC FUNCTIONS
+   ========================================================= */
+
 function setSign(s){
+
   sign = s;
+
   update();
+
 }
 
 
 function fmt(n){
+
   return (
-    Math.round(n*100)/100
+    Math.round(n * 100) / 100
   ).toFixed(2);
+
 }
 
 
-// ---- Zoomed coincidence window ----
+/* =========================================================
+   WINDOW INITIALIZATION
+   ========================================================= */
 
 function buildWindow(svgId){
 
@@ -341,9 +1160,14 @@ function buildWindow(svgId){
     '0 0 400 110'
   );
 
-  svg.innerHTML='';
+  svg.innerHTML = '';
+
 }
 
+
+/* =========================================================
+   DRAW COINCIDENCE WINDOW
+   ========================================================= */
 
 function drawWindow(
   svgId,
@@ -355,26 +1179,30 @@ function drawWindow(
   const svg =
     document.getElementById(svgId);
 
-  svg.innerHTML='';
+  svg.innerHTML = '';
 
   const ns =
     'http://www.w3.org/2000/svg';
 
-  const W=400;
 
-  const xMinMM=-1.4;
-  const xMaxMM=9.2;
+  const W = 400;
+
+  const xMinMM = -1.4;
+
+  const xMaxMM = 9.2;
+
 
   const scaleX =
     mm =>
-      (mm-xMinMM) /
-      (xMaxMM-xMinMM) *
+      (mm - xMinMM) /
+      (xMaxMM - xMinMM) *
       W;
 
-  const baselineY=40;
+
+  const baselineY = 40;
 
 
-  // Main scale baseline
+  /* Main Scale Baseline */
 
   const base =
     document.createElementNS(
@@ -382,7 +1210,11 @@ function drawWindow(
       'line'
     );
 
-  base.setAttribute('x1',0);
+  base.setAttribute(
+    'x1',
+    0
+  );
+
   base.setAttribute(
     'y1',
     baselineY
@@ -400,7 +1232,7 @@ function drawWindow(
 
   base.setAttribute(
     'stroke',
-    '#7a7f84'
+    '#56627a'
   );
 
   base.setAttribute(
@@ -411,12 +1243,13 @@ function drawWindow(
   svg.appendChild(base);
 
 
-  // Main scale ticks
+  /* Main Scale */
 
-  for(let i=0;i<=9;i++){
+  for(let i = 0; i <= 9; i++){
 
     const x =
       scaleX(i);
+
 
     const line =
       document.createElementNS(
@@ -441,17 +1274,17 @@ function drawWindow(
 
     line.setAttribute(
       'y2',
-      baselineY-20
+      baselineY - 20
     );
 
     line.setAttribute(
       'stroke',
-      '#e9e6dd'
+      '#dfe6f5'
     );
 
     line.setAttribute(
       'stroke-width',
-      '1.6'
+      '1.5'
     );
 
     svg.appendChild(line);
@@ -470,7 +1303,7 @@ function drawWindow(
 
     t.setAttribute(
       'y',
-      baselineY-26
+      baselineY - 26
     );
 
     t.setAttribute(
@@ -490,27 +1323,29 @@ function drawWindow(
 
     t.setAttribute(
       'fill',
-      '#9a9ea3'
+      '#77849d'
     );
 
     t.textContent =
-      baseMM+i;
+      baseMM + i;
 
     svg.appendChild(t);
+
   }
 
 
-  // Vernier strip body
+  /* Vernier Strip */
 
   const stripX1 =
-    scaleX(
-      offsetMM-0.15
-    );
+    scaleX(offsetMM - 0.15);
 
   const stripX2 =
     scaleX(
-      offsetMM+9*0.9+0.15
+      offsetMM +
+      9 * 0.9 +
+      0.15
     );
+
 
   const strip =
     document.createElementNS(
@@ -525,12 +1360,12 @@ function drawWindow(
 
   strip.setAttribute(
     'y',
-    baselineY+4
+    baselineY + 4
   );
 
   strip.setAttribute(
     'width',
-    stripX2-stripX1
+    stripX2 - stripX1
   );
 
   strip.setAttribute(
@@ -540,34 +1375,35 @@ function drawWindow(
 
   strip.setAttribute(
     'fill',
-    '#2b2f33'
+    'rgba(255,255,255,0.055)'
   );
 
   strip.setAttribute(
     'stroke',
-    '#4a4038'
+    'rgba(255,255,255,0.12)'
   );
 
   strip.setAttribute(
     'rx',
-    '2'
+    '4'
   );
 
   svg.appendChild(strip);
 
 
-  // Vernier ticks
+  /* Vernier Ticks */
 
-  for(let k=0;k<NDIV;k++){
+  for(let k = 0; k < NDIV; k++){
 
     const mm =
-      offsetMM+k*0.9;
+      offsetMM + k * 0.9;
 
     const x =
       scaleX(mm);
 
     const isHi =
-      k===highlightIdx;
+      k === highlightIdx;
+
 
     const line =
       document.createElementNS(
@@ -582,7 +1418,7 @@ function drawWindow(
 
     line.setAttribute(
       'y1',
-      baselineY+4
+      baselineY + 4
     );
 
     line.setAttribute(
@@ -592,14 +1428,14 @@ function drawWindow(
 
     line.setAttribute(
       'y2',
-      baselineY+22
+      baselineY + 22
     );
 
     line.setAttribute(
       'stroke',
       isHi
-        ? '#e8a33d'
-        : '#b9bec3'
+        ? '#35d9ff'
+        : '#aeb8ce'
     );
 
     line.setAttribute(
@@ -612,7 +1448,9 @@ function drawWindow(
     svg.appendChild(line);
 
 
-    if(k===0){
+    /* Vernier zero */
+
+    if(k === 0){
 
       const t =
         document.createElementNS(
@@ -622,569 +1460,4 @@ function drawWindow(
 
       t.setAttribute(
         'x',
-        x
-      );
-
-      t.setAttribute(
-        'y',
-        baselineY+38
-      );
-
-      t.setAttribute(
-        'text-anchor',
-        'middle'
-      );
-
-      t.setAttribute(
-        'font-size',
-        '9'
-      );
-
-      t.setAttribute(
-        'font-family',
-        'JetBrains Mono'
-      );
-
-      t.setAttribute(
-        'fill',
-        '#c9a15a'
-      );
-
-      t.textContent='0';
-
-      svg.appendChild(t);
-    }
-
-
-    if(isHi){
-
-      const t =
-        document.createElementNS(
-          ns,
-          'text'
-        );
-
-      t.setAttribute(
-        'x',
-        x
-      );
-
-      t.setAttribute(
-        'y',
-        baselineY+38
-      );
-
-      t.setAttribute(
-        'text-anchor',
-        'middle'
-      );
-
-      t.setAttribute(
-        'font-size',
-        '10'
-      );
-
-      t.setAttribute(
-        'font-family',
-        'JetBrains Mono'
-      );
-
-      t.setAttribute(
-        'font-weight',
-        '700'
-      );
-
-      t.setAttribute(
-        'fill',
-        '#e8a33d'
-      );
-
-      t.textContent=k;
-
-      svg.appendChild(t);
-
-
-      // Coincidence guide
-
-      const guide =
-        document.createElementNS(
-          ns,
-          'line'
-        );
-
-      guide.setAttribute(
-        'x1',
-        x
-      );
-
-      guide.setAttribute(
-        'y1',
-        baselineY-20
-      );
-
-      guide.setAttribute(
-        'x2',
-        x
-      );
-
-      guide.setAttribute(
-        'y2',
-        baselineY+22
-      );
-
-      guide.setAttribute(
-        'stroke',
-        '#e8a33d'
-      );
-
-      guide.setAttribute(
-        'stroke-width',
-        '1'
-      );
-
-      guide.setAttribute(
-        'stroke-dasharray',
-        '2,2'
-      );
-
-      guide.setAttribute(
-        'opacity',
-        '0.6'
-      );
-
-      svg.insertBefore(
-        guide,
-        svg.firstChild.nextSibling
-      );
-    }
-  }
-
-
-  // Label
-
-  const lbl =
-    document.createElementNS(
-      ns,
-      'text'
-    );
-
-  lbl.setAttribute(
-    'x',
-    6
-  );
-
-  lbl.setAttribute(
-    'y',
-    baselineY+52
-  );
-
-  lbl.setAttribute(
-    'font-size',
-    '10'
-  );
-
-  lbl.setAttribute(
-    'font-family',
-    'JetBrains Mono'
-  );
-
-  lbl.setAttribute(
-    'fill',
-    '#6f7378'
-  );
-
-  lbl.textContent =
-    'Vernier scale (lower gray strip)';
-
-  svg.appendChild(lbl);
-}
-
-
-// ---- Full-range overview ruler ----
-
-function buildFullRuler(){
-
-  const svg =
-    document.getElementById(
-      'fullRuler'
-    );
-
-  svg.innerHTML='';
-
-  const ns =
-    'http://www.w3.org/2000/svg';
-
-  const W=400;
-  const offX=10;
-  const maxMM=50;
-
-  const scaleX =
-    mm =>
-      offX+
-      mm*(W/maxMM);
-
-
-  const base =
-    document.createElementNS(
-      ns,
-      'line'
-    );
-
-  base.setAttribute(
-    'x1',
-    offX
-  );
-
-  base.setAttribute(
-    'y1',
-    34
-  );
-
-  base.setAttribute(
-    'x2',
-    offX+W
-  );
-
-  base.setAttribute(
-    'y2',
-    34
-  );
-
-  base.setAttribute(
-    'stroke',
-    '#7a7f84'
-  );
-
-  base.setAttribute(
-    'stroke-width',
-    '1.5'
-  );
-
-  svg.appendChild(base);
-
-
-  for(let mm=0;mm<=maxMM;mm+=5){
-
-    const x =
-      scaleX(mm);
-
-    const major =
-      mm%10===0;
-
-    const line =
-      document.createElementNS(
-        ns,
-        'line'
-      );
-
-    line.setAttribute(
-      'x1',
-      x
-    );
-
-    line.setAttribute(
-      'y1',
-      34
-    );
-
-    line.setAttribute(
-      'x2',
-      x
-    );
-
-    line.setAttribute(
-      'y2',
-      major
-        ? 20
-        : 26
-    );
-
-    line.setAttribute(
-      'stroke',
-      major
-        ? '#e9e6dd'
-        : '#8a8f94'
-    );
-
-    line.setAttribute(
-      'stroke-width',
-      major
-        ? 1.4
-        : 0.8
-    );
-
-    svg.appendChild(line);
-
-
-    if(major){
-
-      const t =
-        document.createElementNS(
-          ns,
-          'text'
-        );
-
-      t.setAttribute(
-        'x',
-        x
-      );
-
-      t.setAttribute(
-        'y',
-        14
-      );
-
-      t.setAttribute(
-        'text-anchor',
-        'middle'
-      );
-
-      t.setAttribute(
-        'font-size',
-        '9.5'
-      );
-
-      t.setAttribute(
-        'font-family',
-        'JetBrains Mono'
-      );
-
-      t.setAttribute(
-        'fill',
-        '#9a9ea3'
-      );
-
-      t.textContent =
-        (mm/10)+' cm';
-
-      svg.appendChild(t);
-    }
-  }
-
-
-  const marker =
-    document.createElementNS(
-      ns,
-      'polygon'
-    );
-
-  marker.setAttribute(
-    'id',
-    'fullMarker'
-  );
-
-  marker.setAttribute(
-    'fill',
-    '#e8a33d'
-  );
-
-  svg.appendChild(marker);
-
-  window.__fscaleX =
-    scaleX;
-}
-
-
-function updateFullRuler(mmPos){
-
-  const x =
-    window.__fscaleX(mmPos);
-
-  document.getElementById(
-    'fullMarker'
-  ).setAttribute(
-    'points',
-    `${x-5},44 ${x+5},44 ${x},34`
-  );
-}
-
-
-function update(){
-
-  const mag =
-    parseInt(
-      document.getElementById(
-        'magSlider'
-      ).value,
-      10
-    );
-
-  document.getElementById(
-    'magVal'
-  ).textContent =
-    mag;
-
-
-  document.getElementById(
-    'pill-none'
-  ).className =
-    'pill'+
-    (
-      sign===0
-        ? ' active-none'
-        : ''
-    );
-
-
-  document.getElementById(
-    'pill-pos'
-  ).className =
-    'pill'+
-    (
-      sign===1
-        ? ' active-pos'
-        : ''
-    );
-
-
-  document.getElementById(
-    'pill-neg'
-  ).className =
-    'pill'+
-    (
-      sign===-1
-        ? ' active-neg'
-        : ''
-    );
-
-
-  let zeroErrorMm;
-  let n0;
-  let explain;
-
-
-  if(sign===0){
-
-    zeroErrorMm=0;
-    n0=0;
-
-    explain =
-      'No error — the 0 of the vernier scale is exactly aligned with the 0 of the main scale.';
-
-  } else if(sign===1){
-
-    zeroErrorMm =
-      mag*LC;
-
-    n0=mag;
-
-    explain =
-      `Positive error — the 0 of the vernier has shifted to the right of the 0 of the main scale; vernier division ${mag} coincides with a main scale line.`;
-
-  } else {
-
-    zeroErrorMm =
-      -mag*LC;
-
-    n0 =
-      mag===0
-        ? 0
-        : (NDIV-mag);
-
-    explain =
-      mag===0
-        ? 'No error — the 0 of the vernier scale is exactly aligned with the 0 of the main scale.'
-        : `Negative error — the 0 of the vernier has shifted to the left of the 0 of the main scale; vernier division ${n0} coincides (counting ${mag} divisions from the end).`;
-  }
-
-
-  document.getElementById(
-    'zeVal'
-  ).textContent =
-    (zeroErrorMm>=0?'+':'')+
-    fmt(zeroErrorMm)+
-    ' mm';
-
-
-  document.getElementById(
-    'zeVal2'
-  ).textContent =
-    (zeroErrorMm>=0?'+':'')+
-    fmt(zeroErrorMm)+
-    ' mm';
-
-
-  document.getElementById(
-    'n0Val'
-  ).textContent =
-    'n = '+n0;
-
-
-  document.getElementById(
-    'signExplain'
-  ).textContent =
-    explain;
-
-
-  drawWindow(
-    'win1',
-    0,
-    zeroErrorMm,
-    n0
-  );
-
-
-  // STEP 2
-
-  const tRaw =
-    parseInt(
-      document.getElementById(
-        'tSlider'
-      ).value,
-      10
-    );
-
-  const t =
-    tRaw/10;
-
-  document.getElementById(
-    'tVal'
-  ).textContent =
-    (
-      Math.round(t*10)/10
-    ).toFixed(1);
-
-
-  let observed =
-    t+zeroErrorMm;
-
-  if(observed<0)
-    observed=0;
-
-
-  let msr =
-    Math.floor(observed);
-
-  let rem =
-    observed-msr;
-
-  let vsc =
-    Math.round(
-      rem/LC
-    );
-
-
-  if(vsc>=NDIV){
-    vsc=0;
-    msr+=1;
-  }
-
-
-  const vscMM =
-    vsc*LC;
-
-  const correct =
-    observed-zeroErrorMm;
-
-
-  document.getElementById(
-    'msrVal'
-  ).textContent =
-    msr+' mm';
-
-
-  document.getElementById(
-    'csrVal'
-  ).textContent =
-    fmt(vscMM)+
-    ' mm (
+      
